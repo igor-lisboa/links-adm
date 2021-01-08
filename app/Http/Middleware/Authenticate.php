@@ -9,6 +9,24 @@ use Illuminate\Support\Facades\Auth;
 class Authenticate
 {
     /**
+     * The authentication guard factory instance.
+     *
+     * @var \Illuminate\Support\Facades\Auth
+     */
+    protected $auth;
+
+    /**
+     * Create a new middleware instance.
+     *
+     * @param  \Illuminate\Support\Facades\Auth  $auth
+     * @return void
+     */
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -25,7 +43,7 @@ class Authenticate
                 "success" => false
             ], 401);
         }
-        Auth::login($user);
+        $this->auth->login($user);
         return $next($request);
     }
 }

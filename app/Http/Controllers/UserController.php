@@ -28,7 +28,7 @@ class UserController extends Controller
             throw new Exception("Credenciais inválidas.");
         } catch (Exception $e) {
             return response()->json([
-                "message" => $e->getMessage(),
+                "message" => "Credenciais inválidas.",
                 "data" => [
                     "exception" => $e
                 ],
@@ -46,7 +46,7 @@ class UserController extends Controller
             return $this->login($req);
         } catch (Exception $e) {
             return response()->json([
-                "message" => $e->getMessage(),
+                "message" => "Falha ao tentar registrar o usuário.",
                 "data" => [
                     "exception" => $e
                 ],

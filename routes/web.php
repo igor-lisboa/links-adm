@@ -17,21 +17,23 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api/v1', 'middleware' => ['auth']], function () use ($router) {
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['prefix' => 'users'], function () use ($router) {
         $router->post('/login', 'UserController@login');
         $router->post('/register', 'UserController@register');
     });
 
-    $router->group(['prefix' => 'links'], function () use ($router) {
-        $router->post('/', 'LinkController@store');
-        $router->delete('/{id}', 'LinkController@delete');
-    });
+    $router->group(['middleware' => ['auth']], function () use ($router) {
+        $router->group(['prefix' => 'links'], function () use ($router) {
+            $router->post('/', 'LinkController@store');
+            $router->delete('/{id}', 'LinkController@delete');
+        });
 
-    $router->group(['prefix' => 'categories'], function () use ($router) {
-        $router->get('/', 'CategoryController@index');
-        $router->post('/', 'CategoryController@store');
-        $router->delete('/{id}', 'CategoryController@delete');
-        $router->get('/{id}/links', 'CategoryController@links');
+        $router->group(['prefix' => 'categories'], function () use ($router) {
+            $router->get('/', 'CategoryController@index');
+            $router->post('/', 'CategoryController@store');
+            $router->delete('/{id}', 'CategoryController@delete');
+            $router->get('/{id}/links', 'CategoryController@links');
+        });
     });
 });

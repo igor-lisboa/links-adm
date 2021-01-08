@@ -17,7 +17,7 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        $user = User::where('token', '=', $request->header['Authorization'])->first();
+        $user = User::where('token', '=', $request->header('Authorization'))->first();
         if ($user === null) {
             return response()->json([
                 "message" => "Credenciais inválidas.",

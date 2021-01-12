@@ -17,11 +17,11 @@ class Category extends Model
 
     public function links()
     {
-        $this->hasMany(Link::class);
+        return $this->hasMany(Link::class);
     }
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 }

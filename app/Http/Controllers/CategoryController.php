@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Link;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,32 @@ class CategoryController extends Controller
             ],
             "success" => true
         ]);
+    }
+
+    public function links()
+    {
+        try {
+            $categories = $this->getUserCategories()->get();
+            $categ_links = [];
+            foreach ($categories as $category) {
+                $categ_links[$category->name] = ($category->links ?? []);
+            }
+            return response()->json([
+                "message" => "Links listados com sucesso.",
+                "data" => [
+                    "categories_links" => $categ_links
+                ],
+                "success" => true
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Falha ao listas Links.",
+                "data" => [
+                    "exception" => $e
+                ],
+                "success" => false
+            ], 500);
+        }
     }
 
     public function getUserCategories()
@@ -70,32 +97,6 @@ class CategoryController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Falha ao remover Categoria.",
-                "data" => [
-                    "exception" => $e
-                ],
-                "success" => false
-            ], 500);
-        }
-    }
-
-    public function links()
-    {
-        try {
-            $categories = $this->getUserCategories()->get();
-            $links = [];
-            foreach ($categories as $category) {
-                $links[$category->name] = $category->links() ?? [];
-            }
-            return response()->json([
-                "message" => "Links listados com sucesso.",
-                "data" => [
-                    "links" => $links
-                ],
-                "success" => true
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                "message" => "Falha ao listas Links.",
                 "data" => [
                     "exception" => $e
                 ],

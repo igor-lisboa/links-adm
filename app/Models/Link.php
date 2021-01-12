@@ -17,20 +17,13 @@ class Link extends Model
         'name'
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['category'];
-
     public function category()
     {
-        $this->hasOne(Category::class);
+        return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 }

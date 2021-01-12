@@ -11,6 +11,21 @@ class LinkController extends Controller
     public function store(Request $req)
     {
         try {
+            $this->validate($req, [
+                'category_id' => [
+                    'required'
+                ],
+                'link' => [
+                    'required',
+                    'url'
+                ]
+            ], [
+                'category_id.required' => 'A categoria deve ser informada.',
+                'link.required' => 'O link deve ser informado.',
+                'link.required' => 'O link deve ser uma URL válida.'
+            ]);
+
+
             $link = new Link($req->all());
             $link->user_id = request()->user->id;
             $link->save();
@@ -25,7 +40,8 @@ class LinkController extends Controller
             return response()->json([
                 "message" => "Falha ao gravar Link.",
                 "data" => [
-                    "exception" => $e
+                    "exception" => $e,
+                    "errors" => (isset($e->validator) ? $e->validator->messages() : [])
                 ],
                 "success" => false
             ], 500);

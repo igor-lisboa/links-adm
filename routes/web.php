@@ -37,7 +37,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/', 'CategoryController@index');
             $router->post('/', 'CategoryController@store');
             $router->delete('/{id}', 'CategoryController@delete');
-            $router->get('/{id}/links', 'CategoryController@links');
+            $router->get('/links', 'CategoryController@links');
         });
     });
 });

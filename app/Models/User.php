@@ -26,11 +26,11 @@ class User extends Model
 
     public function categories()
     {
-        $this->hasMany(Category::class);
+        return  $this->hasMany(Category::class);
     }
 
     public function links()
     {
-        $this->hasMany(Link::class);
+        return  $this->hasMany(Link::class);
     }
 }

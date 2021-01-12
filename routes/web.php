@@ -24,6 +24,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     $router->group(['middleware' => ['auth']], function () use ($router) {
+        $router->group(['prefix' => 'users'], function () use ($router) {
+            $router->post('/logout', 'UserController@logout');
+        });
+
         $router->group(['prefix' => 'links'], function () use ($router) {
             $router->post('/', 'LinkController@store');
             $router->delete('/{id}', 'LinkController@delete');

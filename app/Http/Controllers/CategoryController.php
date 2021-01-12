@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -22,14 +21,14 @@ class CategoryController extends Controller
 
     public function getUserCategories()
     {
-        return Category::where('user_id', '=', Auth::user()->id);
+        return Category::where('user_id', '=', request()->user()->id);
     }
 
     public function store(Request $req)
     {
         try {
             $category = new Category($req->all());
-            $category->user_id = Auth::user()->id;
+            $category->user_id = request()->user()->id;
             $category->save();
             return response()->json([
                 "message" => "Categoria gravada com sucesso.",

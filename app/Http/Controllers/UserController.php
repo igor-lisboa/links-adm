@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -13,22 +12,40 @@ class UserController extends Controller
     public function login(Request $req)
     {
         try {
-            $credentials = $req->only('email', 'password');
-            if (Auth::attempt($credentials)) {
-                $user = User::findOrFail(Auth::user()->id);
-                $user->update(["token" => Str::random(50)]);
-                return response()->json([
-                    "message" => "Usuário logado com sucesso.",
-                    "data" => [
-                        "user" => $user
-                    ],
-                    "success" => true
-                ]);
-            }
-            throw new Exception("Credenciais inválidas.");
+            $user = User::where('email', '=', $req->email)->where('email', '=', $req->email)->firstOrFail();
+            $user->update(["token" => Str::random(50)]);
+            return response()->json([
+                "message" => "Usuário logado com sucesso.",
+                "data" => [
+                    "user" => $user
+                ],
+                "success" => true
+            ]);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Credenciais inválidas.",
+                "data" => [
+                    "exception" => $e
+                ],
+                "success" => false
+            ], 401);
+        }
+    }
+
+    public function logout()
+    {
+
+        try {
+            $user =  User::findOrFail(request()->user()->id);
+            $user->update(["token" => null]);
+            return response()->json([
+                "message" => "Usuário deslogado com sucesso.",
+                "data" => [],
+                "success" => true
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Erro ao tentar deslogar usuário.",
                 "data" => [
                     "exception" => $e
                 ],

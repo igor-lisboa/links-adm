@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Link;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class LinkController extends Controller
 {
@@ -13,7 +12,7 @@ class LinkController extends Controller
     {
         try {
             $link = new Link($req->all());
-            $link->user_id = Auth::user()->id;
+            $link->user_id = request()->user()->id;
             $link->save();
             return response()->json([
                 "message" => "Link gravado com sucesso.",
@@ -36,7 +35,7 @@ class LinkController extends Controller
     public function delete($id)
     {
         try {
-            $link = Link::where('user_id', '=', Auth::user()->id)->where('id', '=', $id)->firstOrFail();
+            $link = Link::where('user_id', '=', request()->user()->id)->where('id', '=', $id)->firstOrFail();
             $link->delete();
             return response()->json([
                 "message" => "Link removido com sucesso.",

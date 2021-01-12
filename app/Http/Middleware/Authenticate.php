@@ -4,28 +4,9 @@ namespace App\Http\Middleware;
 
 use App\Models\User;
 use Closure;
-use Illuminate\Support\Facades\Auth;
 
 class Authenticate
 {
-    /**
-     * The authentication guard factory instance.
-     *
-     * @var \Illuminate\Support\Facades\Auth
-     */
-    protected $auth;
-
-    /**
-     * Create a new middleware instance.
-     *
-     * @param  \Illuminate\Support\Facades\Auth  $auth
-     * @return void
-     */
-    public function __construct(Auth $auth)
-    {
-        $this->auth = $auth;
-    }
-
     /**
      * Handle an incoming request.
      *
@@ -43,7 +24,9 @@ class Authenticate
                 "success" => false
             ], 401);
         }
-        $this->auth->login($user);
+
+        $request->merge(['user' => $user]);
+
         return $next($request);
     }
 }

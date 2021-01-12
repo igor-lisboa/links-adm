@@ -21,14 +21,14 @@ class CategoryController extends Controller
 
     public function getUserCategories()
     {
-        return Category::where('user_id', '=', request()->user()->id);
+        return Category::where('user_id', '=', request()->user->id);
     }
 
     public function store(Request $req)
     {
         try {
             $category = new Category($req->all());
-            $category->user_id = request()->user()->id;
+            $category->user_id = request()->user->id;
             $category->save();
             return response()->json([
                 "message" => "Categoria gravada com sucesso.",

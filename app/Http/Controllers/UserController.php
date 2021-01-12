@@ -34,9 +34,8 @@ class UserController extends Controller
 
     public function logout()
     {
-
         try {
-            $user =  User::findOrFail(request()->user()->id);
+            $user = User::findOrFail(request()->user->id);
             $user->update(["token" => null]);
             return response()->json([
                 "message" => "Usuário deslogado com sucesso.",
@@ -57,6 +56,20 @@ class UserController extends Controller
     public function register(Request $req)
     {
         try {
+            $this->validate($req, [
+                'email' => [
+                    'unique:users',
+                    'required'
+                ],
+                'password' => [
+                    'required'
+                ]
+            ], [
+                'email.unique' => 'O e-mail informado já está sendo utilizado por um usuário cadastrado.',
+                'email.required' => 'O e-mail deve ser informado.',
+                'password.required' => 'A senha deve ser informada.'
+            ]);
+
             $credentials = $req->only('email', 'password');
             $user = new User($credentials);
             $user->save();
@@ -64,8 +77,9 @@ class UserController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Falha ao tentar registrar o usuário.",
-                "data" => [
-                    "exception" => $e
+                "errors" => [
+                    "exception" => $e,
+                    "errors" => (isset($e->validator) ? $e->validator->messages() : [])
                 ],
                 "success" => false
             ]);

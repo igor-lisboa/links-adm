@@ -27,6 +27,14 @@ class CategoryController extends Controller
     public function store(Request $req)
     {
         try {
+            $this->validate($req, [
+                'name' => [
+                    'required'
+                ],
+            ], [
+                'name.required' => 'O nome da categoria deve ser informado.',
+            ]);
+
             $category = new Category($req->all());
             $category->user_id = request()->user->id;
             $category->save();
@@ -41,7 +49,8 @@ class CategoryController extends Controller
             return response()->json([
                 "message" => "Falha ao gravar Categoria.",
                 "data" => [
-                    "exception" => $e
+                    "exception" => $e,
+                    "errors" => (isset($e->validator) ? $e->validator->messages() : [])
                 ],
                 "success" => false
             ], 500);
@@ -75,7 +84,7 @@ class CategoryController extends Controller
             $categories = $this->getUserCategories()->get();
             $links = [];
             foreach ($categories as $category) {
-                $links[$category->name] = $category->links;
+                $links[$category->name] = $category->links() ?? [];
             }
             return response()->json([
                 "message" => "Links listados com sucesso.",

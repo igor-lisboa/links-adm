@@ -26,7 +26,8 @@ class CategoryController extends Controller
             $categories = $this->getUserCategories()->get();
             $categ_links = [];
             foreach ($categories as $category) {
-                $categ_links[$category->name] = ($category->links ?? []);
+                $category->links;
+                $categ_links[$category->id] = $category;
             }
             return response()->json([
                 "message" => "Links listados com sucesso.",

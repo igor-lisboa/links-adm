@@ -12,7 +12,7 @@ class UserController extends Controller
     public function login(Request $req)
     {
         try {
-            $user = User::where('email', '=', $req->email)->where('email', '=', $req->email)->firstOrFail();
+            $user = User::where('email', '=', $req->email)->where('password', '=', $req->password)->firstOrFail();
             $user->update(["token" => Str::random(50)]);
             return response()->json([
                 "message" => "Usuário logado com sucesso.",

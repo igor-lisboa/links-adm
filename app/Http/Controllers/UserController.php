@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -26,6 +27,44 @@ class UserController extends Controller
                 "message" => "Credenciais inválidas.",
                 "data" => [
                     "exception" => $e
+                ],
+                "success" => false
+            ], 401);
+        }
+    }
+
+    public function update(Request $req)
+    {
+        try {
+            $this->validate($req, [
+                'email' => [
+                    Rule::unique('users', 'email')->ignore(request()->user->id),
+                    'required'
+                ],
+                'password' => [
+                    'required'
+                ]
+            ], [
+                'email.unique' => 'O e-mail informado já está sendo utilizado por um usuário cadastrado.',
+                'email.required' => 'O e-mail deve ser informado.',
+                'password.required' => 'A senha deve ser informada.'
+            ]);
+
+            $user = User::findOrFail(request()->user->id);
+            $user->update($req->all());
+            return response()->json([
+                "message" => "Usuário atualizado com sucesso.",
+                "data" => [
+                    "user" => $user
+                ],
+                "success" => true
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Erro ao tentar atualizar usuário.",
+                "data" => [
+                    "exception" => $e,
+                    "errors" => (isset($e->validator) ? $e->validator->messages() : [])
                 ],
                 "success" => false
             ], 401);

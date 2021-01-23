@@ -40,14 +40,10 @@ class UserController extends Controller
                 'email' => [
                     Rule::unique('users', 'email')->ignore(request()->user->id),
                     'required'
-                ],
-                'password' => [
-                    'required'
                 ]
             ], [
                 'email.unique' => 'O e-mail informado já está sendo utilizado por um usuário cadastrado.',
-                'email.required' => 'O e-mail deve ser informado.',
-                'password.required' => 'A senha deve ser informada.'
+                'email.required' => 'O e-mail deve ser informado.'
             ]);
 
             $user = User::findOrFail(request()->user->id);

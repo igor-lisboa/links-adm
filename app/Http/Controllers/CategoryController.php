@@ -27,7 +27,7 @@ class CategoryController extends Controller
             $categ_links = [];
             foreach ($categories as $category) {
                 $category->links;
-                $categ_links[$category->id] = $category;
+                $categ_links[] = $category;
             }
             return response()->json([
                 "message" => "Links listados com sucesso.",

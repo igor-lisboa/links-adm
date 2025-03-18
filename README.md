@@ -1,5 +1,6 @@
 # links-adm
-* Api para guardar links
-* Criação de usuário e autenticação do mesmo é necessário para criar:
-     * Categorias
-     * Links
+* Api to store important links
+* Works like a fav section that you can access from everywhere
+* The project have user creation, auth and about the links:
+     * You can create categories
+     * You can create registers with the links
